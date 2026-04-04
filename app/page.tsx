@@ -1,5 +1,5 @@
 "use client";
-
+import { supabase } from "@/lib/supabase";
 import { useEffect, useState } from "react";
 import Link from "next/link";
 
@@ -17,8 +17,18 @@ export default function Home() {
   const destaque = noticias[0];
 
   useEffect(() => {
-    const data = JSON.parse(localStorage.getItem("noticias") || "[]");
-    setNoticias(data);
+
+    const carregar = async () => {
+    const { data } = await supabase
+      .from("noticias")
+      .select("*");
+
+    setNoticias(data || []);
+  };
+
+  carregar();
+   // const data = JSON.parse(localStorage.getItem("noticias") || "[]");
+    //setNoticias(data);
   }, []);
 
   return (

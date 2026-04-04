@@ -142,10 +142,9 @@ export default function Campeonatos() {
 
             {/* RONDONIENSE */}
             {ativo === "Rondoniense" && (
-                <div className="grid gap-6">
-                    <h3 className="font-bold text-green-700 mb-2 border-l-4 border-green-700 pl-2">
-                        Destaque da Rodada
-                    </h3>
+                <div className="grid font-bold  text-green-700 mb-2 pl-2 gap-6">
+                    <img src="/times/Guaporé_FC.png" />
+                    <span>Guaporé conquista título inédito do Rondoniense 2026 e faz festa em casa</span>
 
                     {/* TABELA */}
                     <div className="bg-white p-2 rounded-xl shadow">

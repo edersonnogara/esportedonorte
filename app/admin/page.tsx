@@ -2,6 +2,10 @@
 import { useSearchParams } from "next/navigation";
 import { useState, useEffect } from "react";
 import { times } from "@/data/times";
+import { supabase } from "@/lib/supabase";
+
+
+
 
 // 🧱 TIMES (com logos)
 
@@ -39,8 +43,18 @@ export default function Admin() {
 
   // 🔄 carregar jogos
   useEffect(() => {
-    const data = JSON.parse(localStorage.getItem("jogos") || "[]");
-    setJogos(data);
+    const carregar = async () => {
+      const { data } = await supabase
+        .from("jogos")
+        .select("*");
+
+      setJogos(data || []);
+    };
+
+    carregar();
+
+    //const data = JSON.parse(localStorage.getItem("jogos") || "[]");
+    //setJogos(data);
   }, []);
 
   useEffect(() => {
@@ -57,32 +71,37 @@ export default function Admin() {
   }, [editSlug]);
 
   // ⚽ SALVAR JOGO
-  const salvarJogo = () => {
+  const salvarJogo = async () => {
+
     const data = [...jogos];
 
     let rodadaFinal = rodada;
 
     if (tipo === "semi") rodadaFinal = 90;
     if (tipo === "final") rodadaFinal = 100;
-    const novo = {
-      casa: String(casa),
-      fora: String(fora),
-      golsCasa: Number(golsCasa),
-      golsFora: Number(golsFora),
-      rodada: rodadaFinal,
-      data: String(dataInput),
-      estadio,
-      tipo,
-      confronto,
-    };
+    await supabase.from("jogos").insert([
+      {
+        casa: String(casa),
+        fora: String(fora),
+        golsCasa: Number(golsCasa),
+        golsFora: Number(golsFora),
+        rodada: rodadaFinal,
+        data: String(dataInput),
+        estadio,
+        tipo,
+        confronto,
+      },
+    ]);
+
+
 
     if (editIndex !== null) {
       // ✏️ EDITAR
-      data[editIndex] = novo;
+      data[editIndex] = supabase;
       alert("Jogo atualizado!");
     } else {
       // ➕ NOVO
-      data.push(novo);
+      data.push(supabase);
       alert("Jogo criado!");
     }
 
@@ -113,6 +132,8 @@ export default function Admin() {
     setDataInput("");
     setEstadio("");
     setEditIndex(null);
+
+
   };
 
   const editarJogo = (index: number) => {
@@ -154,12 +175,17 @@ export default function Admin() {
       alert("Notícia atualizada!");
     } else {
       // nova
-      const nova = {
-        titulo,
-        resumo,
-        conteudo,
-        imagens,
-        slug: titulo.toLowerCase().replaceAll(" ", "-"),
+      const nova = async () => {
+        await supabase.from("noticias").insert([
+          {
+            titulo,
+            resumo,
+            conteudo,
+            imagens,
+            slug: titulo.toLowerCase().replaceAll(" ", "-"),
+          },
+        ]);
+        alert("Notícia salva!");
       };
 
       data.push(nova);
@@ -280,22 +306,18 @@ export default function Admin() {
             ))}
           </select>
 
-          <select
-          value={tipo}
-          onChange={(e) => setTipo(e.target.value)}
-           className="border p-2 w-full text-black"
-          >
 
-            <select
+
+          <select
             value={tipo}
-             onChange={(e) => setTipo(e.target.value)}
-             className="border p-2 w-full text-black"
-            >
-              <option value="fase">Fase de Grupos</option>
-              <option value="semi">Semifinal</option>
-              <option value="final">Final</option>
-            </select>
+            onChange={(e) => setTipo(e.target.value)}
+            className="border p-2 w-full text-black"
+          >
+            <option value="fase">Fase de Grupos</option>
+            <option value="semi">Semifinal</option>
+            <option value="final">Final</option>
           </select>
+
 
 
 

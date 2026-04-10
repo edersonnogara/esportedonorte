@@ -1,413 +1,395 @@
 "use client";
-import { useSearchParams } from "next/navigation";
 import { useState, useEffect } from "react";
-import { times } from "@/data/times";
+import { times, getEstadios } from "@/data/times";
 import { supabase } from "@/lib/supabase";
 
-
-
-
-// 🧱 TIMES (com logos)
-
 export default function Admin() {
-  const [aba, setAba] = useState("noticias");
 
-  // 📰 NOTÍCIAS
-  const [titulo, setTitulo] = useState("");
-  const [descricao, setDescricao] = useState("");
-  const [imagem, setImagem] = useState("");
-  const [resumo, setResumo] = useState("");
-  const [conteudo, setConteudo] = useState("");
-  const [imagens, setImagens] = useState<string[]>([""]);
+  type Jogo = {
+    id: string;
+    casa: string;
+    fora: string;
+    golsCasa: number;
+    golsFora: number;
+    rodada: number;
+    tipo: string;
+    confronto: number;
+    data: string;
+    estadio: string;
+    competicao: string;
+  };
 
-  // 👉 Regras:
-  //Rodadas 1–20 → fase de grupos
-  //Rodada 90 → semifinal
-  //Rodada 100 → final (se quiser depois)
+  const atualizarJogo = async (id: string) => {
+    await supabase
+      .from("jogos")
+      .update({
+        casa,
+        fora,
+        gols_casa: golsCasa,
+        gols_fora: golsFora,
+        rodada,
+        tipo,
+        confronto,
+        data: dataInput,
+        estadio,
+        competicao,
+      })
+      .eq("id", id);
 
-  // ⚽ JOGOS
+    carregarJogos();
+  };
+
+  const [aba, setAba] = useState("jogos");
+
+  // ⚽ STATES JOGO
+  const [competicao, setCompeticao] = useState("Competição");
   const [casa, setCasa] = useState("");
   const [fora, setFora] = useState("");
-  const [golsCasa, setGolsCasa] = useState<number | null>(null);
-  const [golsFora, setGolsFora] = useState<number | null>(null);
-  const [rodada, setrodada] = useState(1);
+  const [golsCasa, setGolsCasa] = useState(0);
+  const [golsFora, setGolsFora] = useState(0);
+  const [rodada, setRodada] = useState(1);
   const [tipo, setTipo] = useState("fase");
   const [confronto, setConfronto] = useState(1);
   const [dataInput, setDataInput] = useState("");
   const [estadio, setEstadio] = useState("");
+  const [editId, setEditId] = useState<string | null>(null);
   const [jogos, setJogos] = useState<any[]>([]);
   const [editIndex, setEditIndex] = useState<number | null>(null);
 
-  const searchParams = useSearchParams();
-  const editSlug = searchParams.get("edit");
 
-  // 🔄 carregar jogos
-  useEffect(() => {
-    const carregar = async () => {
-      const { data } = await supabase
-        .from("jogos")
-        .select("*");
+  const [timesDB, setTimesDB] = useState<any[]>([]);
 
-      setJogos(data || []);
-    };
+  const carregarTimes = async () => {
+    const { data, error } = await supabase
+      .from("times")
+      .select("*");
 
-    carregar();
-
-    //const data = JSON.parse(localStorage.getItem("jogos") || "[]");
-    //setJogos(data);
-  }, []);
-
-  useEffect(() => {
-    if (editSlug) {
-      const data = JSON.parse(localStorage.getItem("noticias") || "[]");
-      const noticia = data.find((n: any) => n.slug === editSlug);
-
-      if (noticia) {
-        setTitulo(noticia.titulo);
-        setDescricao(noticia.descricao);
-        setImagem(noticia.imagem);
-      }
-    }
-  }, [editSlug]);
-
-  // ⚽ SALVAR JOGO
-  const salvarJogo = async () => {
-
-    const data = [...jogos];
-
-    let rodadaFinal = rodada;
-
-    if (tipo === "semi") rodadaFinal = 90;
-    if (tipo === "final") rodadaFinal = 100;
-    await supabase.from("jogos").insert([
-      {
-        casa: String(casa),
-        fora: String(fora),
-        golsCasa: Number(golsCasa),
-        golsFora: Number(golsFora),
-        rodada: rodadaFinal,
-        data: String(dataInput),
-        estadio,
-        tipo,
-        confronto,
-      },
-    ]);
-
-
-
-    if (editIndex !== null) {
-      // ✏️ EDITAR
-      data[editIndex] = supabase;
-      alert("Jogo atualizado!");
-    } else {
-      // ➕ NOVO
-      data.push(supabase);
-      alert("Jogo criado!");
+    if (error) {
+      console.error(error);
+      return;
     }
 
-    // 🔥 GARANTIA: remove qualquer coisa inválida
-    const dadosLimpos = data.map((j) => ({
-      casa: j.casa,
-      fora: j.fora,
-      golsCasa: j.golsCasa,
-      golsFora: j.golsFora,
-      rodada: j.rodada,
-      data: j.data,
-      estadio: j.estadio,
-      tipo: j.tipo || "fase",
-      confronto: j.confronto || 1,
-    }));
-
-    localStorage.setItem("jogos", JSON.stringify(dadosLimpos));
-    setJogos(dadosLimpos);
-
-    alert("Salvo com sucesso!");
-
-    // reset
-    setCasa("");
-    setFora("");
-    setGolsCasa(0);
-    setGolsFora(0);
-    setrodada(1);
-    setDataInput("");
-    setEstadio("");
-    setEditIndex(null);
-
-
+    setTimesDB(data || []);
   };
 
-  const editarJogo = (index: number) => {
-    const jogo = jogos[index];
+  useEffect(() => {
+    carregarJogos();
+    carregarTimes(); // 🔥 IMPORTANTE
+  }, []);
 
+  const carregarJogos = async () => {
+    const { data, error } = await supabase
+      .from("jogos")
+      .select("*")
+      .order("rodada", { ascending: true });
+
+    if (error) {
+      console.error(error);
+      return;
+    }
+
+    const formatado = data.map((j: any) => ({
+      id: j.id,
+      casa: j.casa,
+      fora: j.fora,
+      golsCasa: j.gols_casa,
+      golsFora: j.gols_fora,
+      rodada: j.rodada,
+      tipo: j.tipo,
+      confronto: j.confronto,
+      dataInput: j.data,
+      estadio: j.estadio,
+      competicao: j.competicao,
+    }));
+
+    setJogos(formatado);
+  };
+
+  useEffect(() => {
+    if (casa) {
+      const time = times.find(t => t.nome === casa);
+      if (time) setEstadio(time.estadio);
+    }
+  }, [casa]);
+
+
+  // 🔄 CARREGAR
+  useEffect(() => {
+    carregarJogos();
+  }, []);
+
+  // 🔎 FILTRAR TIMES POR COMPETIÇÃO
+  const timesFiltrados = times.filter(t =>
+    t.competicoes.some(c => c.nome === competicao)
+  );
+
+  // 💾 SALVAR JOGO
+  const salvarJogo = async () => {
+
+    if (!casa || !fora) {
+      alert("Selecione os times");
+      return;
+    }
+
+    if (editId) {
+      // ✏️ UPDATE
+      const { error } = await supabase
+        .from("jogos")
+        .update({
+          casa,
+          fora,
+          gols_casa: golsCasa,
+          gols_fora: golsFora,
+          rodada,
+          tipo,
+          confronto,
+          data: dataInput,
+          estadio,
+          competicao,
+        })
+        .eq("id", editId);
+
+      if (error) {
+        console.error(error);
+        alert("Erro ao atualizar");
+        return;
+      }
+
+      alert("Jogo atualizado!");
+    } else {
+      // ➕ INSERT
+      const { error } = await supabase.from("jogos").insert({
+        casa,
+        fora,
+        gols_casa: golsCasa,
+        gols_fora: golsFora,
+        rodada,
+        tipo,
+        confronto,
+        data: dataInput,
+        estadio,
+        competicao,
+      });
+
+      if (error) {
+        console.error(error);
+        alert("Erro ao salvar");
+        return;
+      }
+
+      alert("Jogo salvo com sucesso!");
+    }
+
+    const limparCampos = () => {
+      setCasa("");
+      setFora("");
+      setGolsCasa(0);
+      setGolsFora(0);
+      setRodada(1);
+      setTipo("fase");
+      setConfronto(1);
+      setDataInput("");
+      setEstadio("");
+      setCompeticao("");
+      setEditId(null); // importante se estiver editando
+    };
+
+    // 🔥 LIMPA TUDO
+    limparCampos();
+
+    // 🔄 atualiza lista
+    carregarJogos();
+  };
+
+  const editarJogo = (jogo: Jogo) => {
     setCasa(jogo.casa);
     setFora(jogo.fora);
     setGolsCasa(jogo.golsCasa);
     setGolsFora(jogo.golsFora);
-    setrodada(jogo.rodada);
-    setTipo(jogo.tipo || "fase");
-    setConfronto(jogo.confronto || 1);
-    setDataInput(jogo.data || "");
-    setEstadio(jogo.estadio || "");
-    setEditIndex(index);
+    setRodada(jogo.rodada);
+    setTipo(jogo.tipo);
+    setConfronto(jogo.confronto);
+    setDataInput(jogo.data);
+    setEstadio(jogo.estadio);
+    setCompeticao(jogo.competicao);
+
+    setEditId(jogo.id); // 🔥 ESSENCIAL
   };
 
-  const excluirJogo = (index: number) => {
-    const novos = jogos.filter((_: any, i: number) => i !== index);
+  const excluirJogo = async (id: string) => {
+    const { error } = await supabase
+      .from("jogos")
+      .delete()
+      .eq("id", id);
 
-    setJogos(novos);
-    localStorage.setItem("jogos", JSON.stringify(novos));
-  };
-
-
-
-  const handleSubmit = () => {
-    const data = JSON.parse(localStorage.getItem("noticias") || "[]");
-
-    if (editSlug) {
-      // editar
-      const atualizadas = data.map((n: any) =>
-        n.slug === editSlug
-          ? { ...n, titulo, resumo, conteudo, imagens }
-          : n
-      );
-
-      localStorage.setItem("noticias", JSON.stringify(atualizadas));
-      alert("Notícia atualizada!");
-    } else {
-      // nova
-      const nova = async () => {
-        await supabase.from("noticias").insert([
-          {
-            titulo,
-            resumo,
-            conteudo,
-            imagens,
-            slug: titulo.toLowerCase().replaceAll(" ", "-"),
-          },
-        ]);
-        alert("Notícia salva!");
-      };
-
-      data.push(nova);
-      localStorage.setItem("noticias", JSON.stringify(data));
-      alert("Notícia criada!");
-      setTitulo("");
-      setResumo("");
-      setConteudo("");
-      setImagens([""]);
+    if (error) {
+      console.error(error);
+      alert("Erro ao excluir");
+      return;
     }
 
-
+    carregarJogos();
   };
 
+  function selecionarTimeCasa(nome: string) {
+    setCasa(nome);
+
+    const time = timesDB.find(t => t.nome === nome);
+    if (time) {
+      setEstadio(time.estadio);
+    }
+  }
 
 
+  //_______________________________________________________//
   return (
+    <div className="max-w-3xl mx-auto p-6 space-y-6">
 
-    <div className="max-w-4xl mx-auto p-6 space-y-6">
+      <h1 className="text-2xl font-bold">Admin - Jogos</h1>
 
-      <h1 className="text-2xl font-bold">Painel Admin</h1>
 
-      {/* ABAS */}
+      {/* COMPETIÇÃO */}
+      <select
+        value={competicao}
+        onChange={(e) => setCompeticao(e.target.value)}
+        className="border p-2 w-full bg-purple-700 text-white rounded"
+      >
+        <option value="">Competição</option>
+        <option value="Rondoniense">Rondoniense</option>
+        <option value="Copa Verde">Copa Verde</option>
+        <option value="Série D">Série D</option>
+      </select>
+
+      {/* TIMES */}
+      <select
+        value={casa}
+        onChange={(e) => setCasa(e.target.value)}
+        className="border p-2 w-full  bg-green-600 text-white rounded"
+      >
+        <option value="">Time da casa</option>
+
+        {times.map((t) => (
+          <option key={t.id} value={t.nome}>
+            {t.nome}
+          </option>
+        ))}
+      </select>
+
+      <select
+        value={fora}
+        onChange={(e) => setFora(e.target.value)}
+        className="border p-2 w-full bg-blue-600 text-white rounded"
+      >
+        <option value="">Time visitante</option>
+
+        {times.map((t) => (
+          <option key={t.id} value={t.nome}>
+            {t.nome}
+          </option>
+        ))}
+      </select>
+
+      {/* TIPO */}
+      <select
+        value={tipo}
+        onChange={(e) => setTipo(e.target.value)}
+        className="border p-2 w-full bg-yellow-300 text-black rounded"
+      >
+        <option value="fase">Fase de Grupos</option>
+        <option value="semi">Semifinal</option>
+        <option value="final">Final</option>
+      </select>
+
+      {/* PLACAR */}
       <div className="flex gap-4">
-        <button onClick={() => setAba("noticias")} className="bg-green-600 text-white px-3 py-1 rounded">
-          Notícias
-        </button>
+        <input
+          type="number"
+          value={golsCasa}
+          onChange={(e) => setGolsCasa(Number(e.target.value))}
+          className="border p-2 w-full"
+        />
 
-        <button onClick={() => setAba("jogos")} className="bg-blue-600 text-white px-3 py-1 rounded">
-          Jogos
-        </button>
+        <input
+          type="number"
+          value={golsFora}
+          onChange={(e) => setGolsFora(Number(e.target.value))}
+          className="border p-2 w-full"
+        />
       </div>
 
-      {/* ================= NOTÍCIAS ================= */}
-      {aba === "noticias" && (
-        <div className="space-y-4">
+      {/* RODADA */}
+      <input
+        type="number"
+        value={rodada}
+        onChange={(e) => setRodada(Number(e.target.value))}
+        className="border p-2 w-full"
+      />
 
-          <input
-            className="w-full border p-2 rounded"
-            placeholder="Título"
-            value={titulo}
-            onChange={(e) => setTitulo(e.target.value)}
-          />
+      {/* DATA */}
+      <input
+        type="datetime-local"
+        value={dataInput}
+        onChange={(e) => setDataInput(e.target.value)}
+        className="border p-2 w-full"
+      />
 
-          <input
-            className="w-full border p-2 rounded"
-            placeholder="URL da imagem"
-            value={imagem}
-            onChange={(e) => setImagem(e.target.value)}
-          />
+      {/* ESTÁDIO */}
+      <select
+        value={estadio}
+        onChange={(e) => setEstadio(e.target.value)}
+        className="border p-2 w-full"
+      >
+        <option value="">Selecione o estádio</option>
 
-          <input
-            className="w-full border p-2 rounded"
-            placeholder="Resumo (até 100 caracteres)"
-            maxLength={100}
-            value={resumo}
-            onChange={(e) => setResumo(e.target.value)}
-          />
+        {getEstadios().map((est, i) => (
+          <option key={i} value={est}>
+            {est}
+          </option>
+        ))}
+      </select>
 
-          <textarea
-            className="w-full border p-2 rounded"
-            placeholder="Conteúdo completo"
-            value={conteudo}
-            onChange={(e) => setConteudo(e.target.value)}
-          />
+      {/* BOTÃO */}
+      <button
+        onClick={salvarJogo}
+        className="bg-blue-700 text-white px-4 py-2 rounded w-full"
+      >
+        {editIndex !== null ? "Atualizar Jogo" : "Salvar Jogo"}
+      </button>
 
-          {imagens.map((img, index) => (
-            <input
-              key={index}
-              className="w-full border p-2 rounded"
-              placeholder={`Imagem ${index + 1}`}
-              value={img}
-              onChange={(e) => {
-                const novas = [...imagens];
-                novas[index] = e.target.value;
-                setImagens(novas);
-              }}
-            />
-          ))}
+      {/* LISTA */}
+      <div className="bg-white p-4 rounded shadow text-black">
+        <h2 className="font-bold mb-3">Jogos</h2>
 
-          {imagens.length < 4 && (
-            <button
-              onClick={() => setImagens([...imagens, ""])}
-              className="bg-gray-300 px-2 py-1 rounded"
-            >
-              + Adicionar imagem
-            </button>
-          )}
+        {jogos.map((j, i) => {
+          const casaTime = times.find(t => t.id === j.casa || t.nome === j.casa);
+          const foraTime = times.find(t => t.id === j.fora || t.nome === j.fora);
 
+          return (
+            <div key={i} className="flex justify-between border-b py-2">
+              <span>
+                {casaTime?.nome || j.casa} {j.golsCasa} x {j.golsFora} {foraTime?.nome || j.fora}
+                {" "}({j.competicao})
+              </span>
 
+              <div className="flex gap-2">
+                <button onClick={() => editarJogo(j)} className="bg-yellow-500 px-2 py-1 text-white rounded">
+                  Editar
+                </button>
 
-          <button
-            onClick={handleSubmit}
-            className="bg-green-700 text-white px-4 py-2 rounded"
-          >
-            Publicar
-          </button>
-        </div>
-      )};
+                <button onClick={() => excluirJogo(j.id)} className="bg-red-600 px-2 py-1 text-white rounded">
+                  Excluir
+                </button>
 
 
-      {/* ================= JOGOS ================= */}
-      {aba === "jogos" && (
-        <div className="space-y-4">
-
-          {/* TIMES */}
-          <select value={casa} onChange={(e) => setCasa(e.target.value)} className="border p-2 w-full text-white bg-black">
-            <option value="">Time da casa</option>
-            {times.map((t) => (
-              <option key={t.nome}>{t.nome}</option>
-            ))}
-          </select>
-
-          <select value={fora} onChange={(e) => setFora(e.target.value)} className="border p-2 w-full text-white bg-black">
-            <option value="">Time visitante</option>
-            {times.map((t) => (
-              <option key={t.nome}>{t.nome}</option>
-            ))}
-          </select>
-
-
-
-          <select
-            value={tipo}
-            onChange={(e) => setTipo(e.target.value)}
-            className="border p-2 w-full text-black"
-          >
-            <option value="fase">Fase de Grupos</option>
-            <option value="semi">Semifinal</option>
-            <option value="final">Final</option>
-          </select>
-
-
-
-
-          {/* PLACAR */}
-          <div className="flex gap-4">
-            <input
-              type="number"
-              value={golsCasa ?? ""}
-              onChange={(e) => setGolsCasa(Number(e.target.value))}
-              className="border p-2 w-full"
-            />
-
-            <input
-              type="number"
-              value={golsFora ?? ""}
-              onChange={(e) => setGolsFora(Number(e.target.value))}
-              className="border p-2 w-full"
-            />
-          </div>
-          {/* Rodada */}
-          <div>
-
-            <div>
-              <label className="text-sm text-gray-600">Rodada</label>
-              <input
-                type="number"
-                value={rodada}
-                onChange={(e) => setrodada(Number(e.target.value))}
-                className="border p-2 w-full rounded"
-              />
-            </div>
-            )
-
-          </div>
-          <input
-            type="datetime-local"
-            value={dataInput || ""}
-            onChange={(e) => setDataInput(e.target.value)}
-            className="border p-2 w-full"
-          />
-
-          <input
-            type="text"
-            value={estadio || ""}
-            onChange={(e) => setEstadio(e.target.value)}
-            className="border p-2 w-full"
-            placeholder="Estádio / Cidade"
-          />
-
-          {/* BOTAO SALVAR JOGO */}
-          <button
-            onClick={salvarJogo}
-            className="bg-blue-700 text-white px-4 py-2 rounded"
-          >
-            {editIndex !== null ? "Atualizar Jogo" : "Salvar Jogo"}
-          </button>
-
-          {/* LISTA DE JOGOS */}
-          <div className="text-white bg-black p-4 rounded shadow">
-            <h2 className="font-bold mb-3">Jogos Salvos</h2>
-
-            {jogos.map((j, i) => (
-              <div
-                key={i}
-                className="flex justify-between items-center border-b py-2"
-              >
-                <span>
-                  {j.casa} {j.golsCasa} x {j.golsFora} {j.fora} (Rodada {j.rodada})
-                </span>
-
-                <div className="flex gap-2">
-                  <button
-                    onClick={() => editarJogo(i)}
-                    className="bg-yellow-500 text-white px-2 py-1 rounded text-sm"
-                  >
-                    Editar
-                  </button>
-
-                  <button
-                    onClick={() => excluirJogo(i)}
-                    className="bg-red-600 text-white px-2 py-1 rounded text-sm"
-                  >
-                    Excluir
-                  </button>
-                </div>
               </div>
-            ))}
-          </div>
-        </div>
-      )}
+            </div>
+          );
+        })}
+      </div>
+
+
+
+
     </div>
   );
 }

@@ -11,7 +11,7 @@ export type Time = {
 };
 
 export function getEstadios() {
-  const lista = times.map(t => t.estadio);
+  const lista = times.map((t) => t.estadio);
 
   return [...new Set(lista)]; // remove duplicados
 }
@@ -47,7 +47,7 @@ export const times: Time[] = [
     estado: "RO",
     logo: "/times/SCGenus.png",
     estadio: "Aluizão",
-    competicoes: [{ nome: "Rondoniense" } ],
+    competicoes: [{ nome: "Rondoniense" }],
   },
   {
     id: "rondoniense",
@@ -74,18 +74,95 @@ export const times: Time[] = [
     competicoes: [{ nome: "Rondoniense" }],
   },
 
-//times da copa verde
+  //times da copa verde
 
-{
+  {
     id: "Nacional-AM",
     nome: "Nacional-AM",
     estado: "AM",
     logo: "/times/Nacional_FC_Amazonas.png",
-    estadio: "Aglair Tonelli",
+    estadio: "Arena da Amazônia",
     competicoes: [{ nome: "Copa Verde", grupo: "A" }],
   },
 
+  {
+    id: "Trem",
+    nome: "Trem",
+    estado: "AP",
+    logo: "/times/Trem.png",
+    estadio: "Zerão",
+    competicoes: [{ nome: "Copa Verde", grupo: "A" }],
+  },
 
+  {
+    id: "GAS",
+    nome: "GAS",
+    estado: "RR",
+    logo: "/times/GASampaioRR.png",
+    estadio: "Canarinho",
+    competicoes: [{ nome: "Copa Verde", grupo: "A" }],
+  },
 
+  {
+    id: "Paysandu",
+    nome: "Paysandu",
+    estado: "PA",
+    logo: "/times/PaysanduSC.png",
+    estadio: "Curuzu",
+    competicoes: [{ nome: "Copa Verde", grupo: "A" }],
+  },
 
+  {
+    id: "Independencia",
+    nome: "Independência",
+    estado: "AC",
+    logo: "/times/independenciafc.png",
+    estadio: "Tonicão",
+    competicoes: [{ nome: "Copa Verde", grupo: "A" }],
+  },
+
+{
+    id: "Amazonas",
+    nome: "Amazonas",
+    estado: "AM",
+    logo: "/times/AmazonasFC.png",
+    estadio: "Carlos Zamith",
+    competicoes: [{ nome: "Copa Verde", grupo: "B" }],
+  },
+
+  {
+    id: "AguiadeMarabA",
+    nome: "Águia de Marabá",
+    estado: "PA",
+    logo: "/times/Águia_de_Marabá.png",
+    estadio: "Zinho de Oliveira",
+    competicoes: [{ nome: "Copa Verde", grupo: "B" }],
+  },
+
+  {
+    id: "Remo",
+    nome: "Remo",
+    estado: "PA",
+    logo: "/times/Remo.png",
+    estadio: "Mangueirão",
+    competicoes: [{ nome: "Copa Verde", grupo: "B" }],
+  },
+
+  {
+    id: "MonteRoraima",
+    nome: "Monte Roraima",
+    estado: "RR",
+    logo: "/times/MonteRoraima.png",
+    estadio: "Canarinho",
+    competicoes: [{ nome: "Copa Verde", grupo: "B" }],
+  },
+
+  {
+    id: "Galvez",
+    nome: "Galvez",
+    estado: "AC",
+    logo: "/times/Galvez.png",
+    estadio: "Tonicão",
+    competicoes: [{ nome: "Copa Verde", grupo: "B" }],
+  },
 ];

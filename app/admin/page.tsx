@@ -9,14 +9,15 @@ export default function Admin() {
     id: string;
     casa: string;
     fora: string;
-    golsCasa: number;
-    golsFora: number;
+    golsCasa?: number | null;
+    golsFora?: number | null;
     rodada: number;
     tipo: string;
     confronto: number;
     data: string;
     estadio: string;
     competicao: string;
+    grupo: string;
   };
 
   const atualizarJogo = async (id: string) => {
@@ -25,14 +26,15 @@ export default function Admin() {
       .update({
         casa,
         fora,
-        gols_casa: golsCasa,
-        gols_fora: golsFora,
+        gols_casa: golsCasa ?? null,
+        gols_fora: golsFora ?? null,
         rodada,
         tipo,
         confronto,
         data: dataInput,
         estadio,
         competicao,
+        grupo,
       })
       .eq("id", id);
 
@@ -45,8 +47,8 @@ export default function Admin() {
   const [competicao, setCompeticao] = useState("Competição");
   const [casa, setCasa] = useState("");
   const [fora, setFora] = useState("");
-  const [golsCasa, setGolsCasa] = useState(0);
-  const [golsFora, setGolsFora] = useState(0);
+  const [golsCasa, setGolsCasa] = useState<number | null>(null);
+  const [golsFora, setGolsFora] = useState<number | null>(null);
   const [rodada, setRodada] = useState(1);
   const [tipo, setTipo] = useState("fase");
   const [confronto, setConfronto] = useState(1);
@@ -55,6 +57,7 @@ export default function Admin() {
   const [editId, setEditId] = useState<string | null>(null);
   const [jogos, setJogos] = useState<any[]>([]);
   const [editIndex, setEditIndex] = useState<number | null>(null);
+  const [grupo, setGrupo] = useState("");
 
 
   const [timesDB, setTimesDB] = useState<any[]>([]);
@@ -81,7 +84,8 @@ export default function Admin() {
     const { data, error } = await supabase
       .from("jogos")
       .select("*")
-      .order("rodada", { ascending: true });
+      .order("rodada", { ascending: true })
+      .eq("competicao", "Copa Verde");
 
     if (error) {
       console.error(error);
@@ -100,6 +104,7 @@ export default function Admin() {
       dataInput: j.data,
       estadio: j.estadio,
       competicao: j.competicao,
+      grupo: j.grupo,
     }));
 
     setJogos(formatado);
@@ -138,14 +143,15 @@ export default function Admin() {
         .update({
           casa,
           fora,
-          gols_casa: golsCasa,
-          gols_fora: golsFora,
+          gols_casa: golsCasa ?? null,
+          gols_fora: golsFora ?? null,
           rodada,
           tipo,
           confronto,
           data: dataInput,
           estadio,
           competicao,
+          grupo: competicao === "Copa Verde" ? grupo : null
         })
         .eq("id", editId);
 
@@ -169,6 +175,7 @@ export default function Admin() {
         data: dataInput,
         estadio,
         competicao,
+        grupo: competicao === "Copa Verde" ? grupo : null
       });
 
       if (error) {
@@ -183,8 +190,8 @@ export default function Admin() {
     const limparCampos = () => {
       setCasa("");
       setFora("");
-      setGolsCasa(0);
-      setGolsFora(0);
+      setGolsCasa(null);
+      setGolsFora(null);
       setRodada(1);
       setTipo("fase");
       setConfronto(1);
@@ -192,6 +199,7 @@ export default function Admin() {
       setEstadio("");
       setCompeticao("");
       setEditId(null); // importante se estiver editando
+      setGrupo("");
     };
 
     // 🔥 LIMPA TUDO
@@ -204,15 +212,15 @@ export default function Admin() {
   const editarJogo = (jogo: Jogo) => {
     setCasa(jogo.casa);
     setFora(jogo.fora);
-    setGolsCasa(jogo.golsCasa);
-    setGolsFora(jogo.golsFora);
+    setGolsCasa(jogo.golsCasa ?? null);
+    setGolsFora(jogo.golsFora ?? null);
     setRodada(jogo.rodada);
     setTipo(jogo.tipo);
     setConfronto(jogo.confronto);
     setDataInput(jogo.data);
     setEstadio(jogo.estadio);
     setCompeticao(jogo.competicao);
-
+    setGrupo(jogo.grupo);
     setEditId(jogo.id); // 🔥 ESSENCIAL
   };
 
@@ -257,8 +265,21 @@ export default function Admin() {
         <option value="">Competição</option>
         <option value="Rondoniense">Rondoniense</option>
         <option value="Copa Verde">Copa Verde</option>
-        <option value="Série D">Série D</option>
+        <option value="Serie D">Serie D</option>
       </select>
+
+      {/* 🔥 SÓ MOSTRA GRUPO SE FOR COPA VERDE */}
+      {competicao === "Copa Verde" && (
+        <select
+          value={grupo}
+          onChange={(e) => setGrupo(e.target.value)}
+          className="border p-2 rounded"
+        >
+          <option value="">Grupo</option>
+          <option value="A">Grupo A</option>
+          <option value="B">Grupo B</option>
+        </select>
+      )}
 
       {/* TIMES */}
       <select
@@ -304,15 +325,21 @@ export default function Admin() {
       <div className="flex gap-4">
         <input
           type="number"
-          value={golsCasa}
-          onChange={(e) => setGolsCasa(Number(e.target.value))}
+          placeholder="Gols Casa"
+          value={golsCasa ?? ""}
+          onChange={(e) =>
+            setGolsCasa(e.target.value === "" ? null : Number(e.target.value))
+          }
           className="border p-2 w-full"
         />
 
         <input
           type="number"
-          value={golsFora}
-          onChange={(e) => setGolsFora(Number(e.target.value))}
+          placeholder="Gols Fora"
+          value={golsFora ?? ""}
+          onChange={(e) =>
+            setGolsFora(e.target.value === "" ? null : Number(e.target.value))
+          }
           className="border p-2 w-full"
         />
       </div>

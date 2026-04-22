@@ -64,7 +64,7 @@ export default function Home() {
 
                     />
 
-                    <div className="absolute bottom-0 p-6 bg-gradient-to from-black/80 to-transparent text-white">
+                    <div className="absolute bottom-0 p-6 bg-gradient-to from-black/80 to-transparent text-black">
                       <h2 className="text-2xl font-bold">
                         {destaque.titulo}
                       </h2>
@@ -150,7 +150,7 @@ export default function Home() {
                 {timesRO.map((t) => (
                   <div key={t.nome} className="flex flex-col items-center text-xs">
                     <img src={t.logo} className="w-10 h-10" />
-                    <span className="text-center">{t.nome}</span>
+                    <span className="text-black text-center">{t.nome}</span>
                   </div>
                 ))}
               </div>

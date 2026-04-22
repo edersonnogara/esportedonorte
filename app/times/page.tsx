@@ -51,7 +51,17 @@ export default function Times() {
           <h2 className="font-bold text-gray-800">Genus FC</h2>
         </Link>
 
+        {/* Rolim de Moura */}
+        <Link href="/times/rolimdemoura" className="bg-white p-4 rounded-xl shadow flex items-center gap-4 hover:scale-105 transition">
+          <Image src="/times/RolimDeMouraEC.png" width={40} height={40} alt="Rolim de Moura" />
+          <h2 className="font-bold text-gray-800">Rolim de Moura</h2>
+        </Link>
 
+        {/* Itapuense */}
+        <Link href="/times/itapuensero" className="bg-white p-4 rounded-xl shadow flex items-center gap-4 hover:scale-105 transition">
+          <Image src="/times/itapuensero.png" width={40} height={40} alt="Itapuense FC" />
+          <h2 className="font-bold text-gray-800">Itapuense FC</h2>
+        </Link>
 
       </div >
       <div className=" p-2 max-w-6x1 mx-auto">
@@ -71,7 +81,7 @@ export default function Times() {
             <h2 className="font-bold text-gray-800">Guaporé FC</h2>
           </Link>
 
-          
+
         </div>
       </div>
 
@@ -92,7 +102,28 @@ export default function Times() {
             <h2 className="font-bold text-gray-800">Guaporé FC</h2>
           </Link>
 
-          
+
+        </div>
+      </div>
+
+      <div className=" p-2 max-w-6x1 mx-auto">
+        <h1 className=" text-2xl font-bold mb-6">Times de Rondônia - Campeonato Brasileiro Feminino Série A3 - 2026</h1>
+
+        <div className="grid md:grid-cols-4 gap-6">
+
+          {/* Rolim de Moura */}
+          <Link href="/times/rolimdemoura" className="bg-white p-4 rounded-xl shadow flex items-center gap-4 hover:scale-105 transition">
+            <Image src="/times/RolimDeMouraEC.png" width={40} height={40} alt="Rolim de Moura" />
+            <h2 className="font-bold text-gray-800">Rolim de Moura</h2>
+          </Link>
+
+          {/* Itapuense */}
+          <Link href="/times/itapuensero" className="bg-white p-4 rounded-xl shadow flex items-center gap-4 hover:scale-105 transition">
+            <Image src="/times/itapuensero.png" width={40} height={40} alt="Itapuense FC" />
+            <h2 className="font-bold text-gray-800">Itapuense FC</h2>
+          </Link>
+
+
         </div>
       </div>
 

@@ -114,7 +114,7 @@ export default function CopaVerde() {
 
       // ❌ IGNORA JOGO SEM RESULTADO
       if (j.golsCasa == null || j.golsFora == null) return;
-      
+
       const chaveCasa = Object.keys(tabela).find(
         (k) => normalizar(k) === normalizar(j.casa)
       );
@@ -278,6 +278,7 @@ export default function CopaVerde() {
 
 
 
+
   // ================= UI =================
   return (
     <div className="p-6 space-y-8">
@@ -429,7 +430,12 @@ export default function CopaVerde() {
             const timeInfo = getTime(t.nome);
 
             return (
-              <div key={i} className="grid grid-cols-8 p-2 border-b text-sm text-black">
+              <div
+                key={i}
+                className={`grid grid-cols-8 p-2 border-b text-black text-sm
+                ${i < 2 ? "bg-green-100 font-bold" : ""}
+            `}
+              >
                 <span>{i + 1}</span>
 
                 <div className="col-span-2 flex items-center gap-2">
@@ -524,7 +530,7 @@ export default function CopaVerde() {
 
       {/* ================= SEMI ================= */}
       <div className="bg-yellow-100 p-4 rounded-xl shadow">
-        <h2 className="font-bold text-black mb-3">Segunda Fase</h2>
+        <h2 className="font-bold text-black mb-3">Copa Verde - Segunda Fase</h2>
 
         {semi.map((s, i) => (
           <p key={i} className="font-bold  text-black text-lg">

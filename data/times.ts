@@ -1,4 +1,3 @@
-
 export type Time = {
   id: string;
   nome: string;
@@ -42,6 +41,25 @@ export const times: Time[] = [
     estadio: "Cassolão",
     competicoes: [{ nome: "Rondoniense" }, { nome: "Copa Verde", grupo: "A" }],
   },
+
+  {
+    id: "rolimdemoura",
+    nome: "Rolim de Moura",
+    estado: "RO",
+    logo: "/times/RolimDeMouraEC.png",
+    estadio: "Cassolão",
+    competicoes: [{ nome: "BrasileiraoA3", grupo: "A" }],
+  },
+
+  {
+    id: "itapuensero",
+    nome: "Itapuense",
+    estado: "RO",
+    logo: "/times/itapuensero.png",
+    estadio: "Aluizão",
+    competicoes: [{ nome: "BrasileiraoA3", grupo: "A" }],
+  },
+
   {
     id: "genus",
     nome: "Genus",
@@ -122,7 +140,7 @@ export const times: Time[] = [
     competicoes: [{ nome: "Copa Verde", grupo: "A" }],
   },
 
-{
+  {
     id: "Amazonas",
     nome: "Amazonas",
     estado: "AM",

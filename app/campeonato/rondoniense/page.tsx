@@ -14,6 +14,7 @@ type Jogo = {
     data: string;
     estadio: string;
     competicao: string;
+
 };
 
 export default function Rondoniense() {
@@ -246,6 +247,7 @@ export default function Rondoniense() {
 
     const final = semis ? gerarFinal(semis) : null;
 
+    
 
 
     function agruparPorRodada(jogos: any[]) {
@@ -290,12 +292,69 @@ export default function Rondoniense() {
             .replace("ç", "c");
     }
 
-    const jogosSemi = jogos.filter(j => j.rodada === 90);
-    const rodadasSemi = agruparPorRodada(jogosSemi);
+    const semiIda = jogos.filter(j => j.rodada === 90);
+    const semiVolta = jogos.filter(j => j.rodada === 91);
+    const finalIda = jogos.filter((j) => j.rodada === 98);
+    const finalVolta = jogos.filter((j) => j.rodada === 99);
+    const rodadasSemi = agruparPorRodada(semiIda);
+    const rodadafinal = agruparPorRodada(finalIda);
+    function calcularFinal() {
+        if (finalIda.length === 0 || finalVolta.length === 0) return null;
+
+        const ida = finalIda[0];
+        const volta = finalVolta[0];
+
+        if (ida.golsCasa == null || volta.golsCasa == null) return null;
+
+        const timeA = ida.casa;
+        const timeB = ida.fora;
+
+        const golsA =
+            ida.golsCasa +
+            (volta.casa === timeA ? volta.golsCasa : volta.golsFora);
+
+        const golsB =
+            ida.golsFora +
+            (volta.casa === timeB ? volta.golsCasa : volta.golsFora);
+
+        let campeao = null;
+
+        if (golsA > golsB) campeao = timeA;
+        if (golsB > golsA) campeao = timeB;
+
+        return {
+            agregado: `${golsA} x ${golsB}`,
+            campeao,
+        };
+    }
+
+    const resultadoFinal = calcularFinal();
+
+
 
     //______________________________________________________________
     return (
         <div className="p-6 space-y-6">
+
+            {resultadoFinal?.campeao && (
+                <div className="bg-green-700 text-white p-5 rounded-xl shadow flex items-center gap-3">
+
+                    <img
+                        src={getTime(resultadoFinal.campeao)?.logo}
+                        className="w-10 h-10"
+                    />
+
+                    <div>
+                        <h2 className="text-xl font-bold">
+                            🏆 {resultadoFinal.campeao} é campeão Rondoniense 2026!
+                        </h2>
+                        <p className="text-sm">
+                            Placar agregado: {resultadoFinal.agregado}
+                        </p>
+                    </div>
+
+                </div>
+            )}
 
             <h1 className="text-xl font-bold text-white">
                 Campeonato Rondoniense
@@ -485,20 +544,192 @@ export default function Rondoniense() {
                         })}
 
                     </div>
-                ))}
+                ))
+                }
+
+                <h2 className="font-bold text-green-800 mt-6 mb-3">
+                    Volta
+                </h2>
+
+                {semiVolta.map((j, i) => {
+                    const casa = getTime(j.casa);
+                    const fora = getTime(j.fora);
+
+                    return (
+                        <div key={i} className="border-b py-2 text-sm text-black">
+                            <div className="grid grid-cols-4 items-center">
+                                {/* DATA + ESTÁDIO */}
+                                <div className="text-gray-600 text-xs">
+                                    {j.data
+                                        ? `${new Date(j.data).toLocaleString("pt-BR")} • ${j.estadio}`
+                                        : "Data não informada"}
+                                </div>
+
+                                {/* CASA */}
+                                <div className="flex items-center gap-2 justify-end pr-2">
+                                    <span>{casa?.nome || j.casa}</span>
+
+                                    {casa?.logo ? (
+                                        <img src={casa.logo} className="w-5 h-5" />
+                                    ) : (
+                                        <div className="w-5 h-5 bg-gray-300 rounded" />
+                                    )}
+                                </div>
+
+                                {/* PLACAR */}
+                                <div className="text-center font-bold">
+                                    {j.golsCasa == null || j.golsFora == null
+                                        ? "vs"
+                                        : `${j.golsCasa} x ${j.golsFora}`}
+                                </div>
+
+                                {/* FORA */}
+                                <div className="flex items-center gap-2 pl-2">
+                                    {fora?.logo ? (
+                                        <img src={fora.logo} className="w-5 h-5" />
+                                    ) : (
+                                        <div className="w-5 h-5 bg-gray-300 rounded" />
+                                    )}
+
+                                    <span>{fora?.nome || j.fora}</span>
+                                </div>
+
+                            </div>
+                        </div>
+                    );
+                })}
+
+
             </div>
 
-            {
-                final && (
-                    <div className="bg-yellow-100 p-4 rounded-xl shadow">
-                        <h2 className="font-bold mb-3 text-black">Final</h2>
+            {/* 🔴 Final */}
+            <div className="bg-white p-4 rounded-xl">
+                <h2 className="font-bold mb-3 text-black">
+                    Finais
+                </h2>
 
-                        <p className="font-bold text-lg">
-                            {final.casa} x {final.fora}
-                        </p>
+                {Object.keys(rodadafinal).length === 0 && (
+                    <p className="text-gray-400">Nenhum jogo cadastrado</p>
+                )}
+
+                {Object.keys(rodadafinal).map((r) => (
+                    <div key={r} className="mb-4">
+
+                        <h3 className="font-bold text-green-700 mb-2">
+                            {r === "98" ? "Ida" : "Volta"}
+                        </h3>
+
+                        {rodadafinal[r].map((j: Jogo, i: number) => {
+
+                            const casa = getTime(j.casa);
+                            const fora = getTime(j.fora);
+
+                            return (
+                                <div
+                                    key={i}
+                                    className="grid grid-cols-4 items-center p-2 border-b text-black text-sm"
+                                >
+
+                                    {/* DATA + ESTÁDIO */}
+                                    <div className="text-gray-600 text-xs">
+                                        {j.data
+                                            ? `${new Date(j.data).toLocaleString("pt-BR")} • ${j.estadio}`
+                                            : "Data não informada"}
+                                    </div>
+
+                                    {/* CASA */}
+                                    <div className="flex items-center gap-2 justify-end pr-2">
+                                        <span>{casa?.nome || j.casa}</span>
+
+                                        {casa?.logo ? (
+                                            <img src={casa.logo} className="w-5 h-5" />
+                                        ) : (
+                                            <div className="w-5 h-5 bg-gray-300 rounded" />
+                                        )}
+                                    </div>
+
+                                    {/* PLACAR */}
+                                    <div className="text-center font-bold">
+                                        {j.golsCasa == null || j.golsFora == null
+                                            ? "vs"
+                                            : `${j.golsCasa} x ${j.golsFora}`}
+                                    </div>
+
+                                    {/* FORA */}
+                                    <div className="flex items-center gap-2 pl-2">
+                                        {fora?.logo ? (
+                                            <img src={fora.logo} className="w-5 h-5" />
+                                        ) : (
+                                            <div className="w-5 h-5 bg-gray-300 rounded" />
+                                        )}
+
+                                        <span>{fora?.nome || j.fora}</span>
+                                    </div>
+
+                                </div>
+                            );
+                        })}
+
                     </div>
-                )
-            }
+                ))
+                }
+
+                <h2 className="font-bold text-green-800 mt-6 mb-3">
+                    Volta
+                </h2>
+
+                {finalVolta.map((j, i) => {
+                    const casa = getTime(j.casa);
+                    const fora = getTime(j.fora);
+
+                    return (
+                        <div key={i} className="border-b py-2 text-sm text-black">
+                            <div className="grid grid-cols-4 items-center">
+                                {/* DATA + ESTÁDIO */}
+                                <div className="text-gray-600 text-xs">
+                                    {j.data
+                                        ? `${new Date(j.data).toLocaleString("pt-BR")} • ${j.estadio}`
+                                        : "Data não informada"}
+                                </div>
+
+                                {/* CASA */}
+                                <div className="flex items-center gap-2 justify-end pr-2">
+                                    <span>{casa?.nome || j.casa}</span>
+
+                                    {casa?.logo ? (
+                                        <img src={casa.logo} className="w-5 h-5" />
+                                    ) : (
+                                        <div className="w-5 h-5 bg-gray-300 rounded" />
+                                    )}
+                                </div>
+
+                                {/* PLACAR */}
+                                <div className="text-center font-bold">
+                                    {j.golsCasa == null || j.golsFora == null
+                                        ? "vs"
+                                        : `${j.golsCasa} x ${j.golsFora}`}
+                                </div>
+
+                                {/* FORA */}
+                                <div className="flex items-center gap-2 pl-2">
+                                    {fora?.logo ? (
+                                        <img src={fora.logo} className="w-5 h-5" />
+                                    ) : (
+                                        <div className="w-5 h-5 bg-gray-300 rounded" />
+                                    )}
+
+                                    <span>{fora?.nome || j.fora}</span>
+                                </div>
+
+                            </div>
+                        </div>
+                    );
+                })}
+
+
+            </div>
+
+
 
         </div>
     );

@@ -1,3 +1,4 @@
+
 "use client";
 import { useState, useEffect } from "react";
 import { times, getEstadios } from "@/data/times";
@@ -419,4 +420,5 @@ export default function Admin() {
 
     </div>
   );
+
 }

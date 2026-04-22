@@ -28,13 +28,13 @@ export default function RootLayout({
       <body className="bg-gray-100">
 
         {/* NAVBAR GLOBAL */}
-        <nav className="bg-green-700 text-white px-6 py-4 shadow-md">
+        <nav className="bg-green-800 text-white px-6 py-4 shadow-md">
           <div className="max-w-6xl mx-auto flex justify-between items-center">
             <h1 className="font-bold text-xl">Esporte do Norte</h1>
             <div className="flex gap-6 text-sm">
               <Link href="/" className="hover:underline">Home</Link>
               <Link href="/times" className="hover:underline">Times</Link>
-              <Link href="/campeonato" className="hover:underline">Campeonatos</Link>
+              
 
             </div>
           </div>

@@ -283,7 +283,7 @@ export default function CopaVerde() {
     <div className="p-6 space-y-8">
 
       <h1 className="text-2xl font-bold text-white">
-        Copa Verde - Times do Norte
+        Copa Verde - Grupos dos Times de Rondônia
       </h1>
 
       {/* ================= GRUPO A ================= */}
@@ -524,10 +524,10 @@ export default function CopaVerde() {
 
       {/* ================= SEMI ================= */}
       <div className="bg-yellow-100 p-4 rounded-xl shadow">
-        <h2 className="font-bold text-black mb-3">Semifinais</h2>
+        <h2 className="font-bold text-black mb-3">Segunda Fase</h2>
 
         {semi.map((s, i) => (
-          <p key={i} className="font-bold text-lg">
+          <p key={i} className="font-bold  text-black text-lg">
             {s.casa} x {s.fora}
           </p>
         ))}
@@ -535,4 +535,5 @@ export default function CopaVerde() {
 
     </div>
   );
+
 }

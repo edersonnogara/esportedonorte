@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { supabase } from "@/lib/supabase";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
-import AdBanner from "@/components/AdBanner";
+//import AdBanner from "@/components/AdBanner";
 
 type Noticia = {
   id: string;

@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { supabase } from "@/lib/supabase";
 import { times } from "@/data/times";
-import AdBanner from "@/components/AdBanner";
+//import AdBanner from "@/components/AdBanner";
 
 type Jogo = {
     id: string;

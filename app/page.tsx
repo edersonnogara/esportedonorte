@@ -4,8 +4,8 @@ import { useEffect, useState } from "react";
 import { supabase } from "@/lib/supabase";
 import { times } from "@/data/times";
 import Link from "next/link";
-import AdBanner from "@/components/AdBanner";
-import Bannerlateral from "@/components/lateral";
+//import AdBanner from "@/components/AdBanner";
+//import Bannerlateral from "@/components/lateral";
 
 
 type Noticia = {

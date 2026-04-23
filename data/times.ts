@@ -41,7 +41,7 @@ export const times: Time[] = [
     id: "guapore",
     nome: "Guaporé",
     estado: "RO",
-    logo: "/times/Guaporé_FC.png",
+    logo: "/times/Guapore_FC.png",
     estadio: "Cassolão",
     competicoes: [{ nome: "Rondoniense" }, { nome: "Copa Verde", grupo: "A" }],
     cidade: "Rolim de Moura",

@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import Link from "next/link";
+import Script from "next/script";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -34,11 +35,19 @@ export default function RootLayout({
             <div className="flex gap-6 text-sm">
               <Link href="/" className="hover:underline">Home</Link>
               <Link href="/times" className="hover:underline">Times</Link>
-              
+
 
             </div>
           </div>
         </nav>
+        {/* 🔥 GOOGLE ADS GLOBAL */}
+        <Script
+          async
+          strategy="afterInteractive"
+          src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1929109766263245"
+          crossOrigin="anonymous"
+        />
+
 
         {/* CONTEÚDO */}
         <main className="max-w-6xl mx-auto p-6">

@@ -113,7 +113,7 @@ export default function Home() {
               </h2>
             </Link>
 
-            <AdBanner />
+            
           </div>
 
           {/* ⚽ LATERAL */}
@@ -178,7 +178,7 @@ export default function Home() {
 
             {/* 💰 ESPAÇO ANÚNCIO */}
             <div className="bg-gray-200 p-6 rounded-xl text-center text-gray-600">
-              <Bannerlateral />
+              Anuncie AQUI! entre em contato conosco!
             </div>
 
 

@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { supabase } from "@/lib/supabase";
 import { times } from "@/data/times";
+import AdBanner from "@/components/AdBanner";
 
 // ================= TIPOS =================
 type Jogo = {
@@ -538,8 +539,9 @@ export default function CopaVerde() {
           </p>
         ))}
       </div>
-
+      <AdBanner />
     </div>
+
   );
 
 }

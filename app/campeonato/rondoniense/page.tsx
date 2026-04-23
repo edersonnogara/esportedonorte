@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { supabase } from "@/lib/supabase";
 import { times } from "@/data/times";
+import AdBanner from "@/components/AdBanner";
 
 type Jogo = {
     id: string;
@@ -247,7 +248,7 @@ export default function Rondoniense() {
 
     const final = semis ? gerarFinal(semis) : null;
 
-    
+
 
 
     function agruparPorRodada(jogos: any[]) {
@@ -729,7 +730,7 @@ export default function Rondoniense() {
 
             </div>
 
-
+            <AdBanner />
 
         </div>
     );

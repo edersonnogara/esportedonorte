@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { supabase } from "@/lib/supabase";
 import { times } from "@/data/times";
 import Link from "next/link";
+import AdBanner from "@/components/AdBanner";
 
 type Noticia = {
   id: string;
@@ -46,7 +47,7 @@ export default function Home() {
 
       <div className="p-6 space-y-8 max-w-6xl mx-auto">
 
-       
+
         {/* 🔥 GRID PRINCIPAL */}
         <div className="grid md:grid-cols-3 gap-6">
 
@@ -78,7 +79,11 @@ export default function Home() {
               )}
             </h2>
 
+            <AdBanner />
+
             {noticias.slice(1).map((n) => (
+
+
               <Link key={n.id} href={`/noticia/${n.id}`}>
                 <div className="flex gap-3 bg-white rounded-xl overflow-hidden shadow hover:scale-[1.01] transition">
 
@@ -140,6 +145,10 @@ export default function Home() {
               </div>
             </div>
 
+            <div className="bg-gray-200 p-6 rounded-xl text-center text-gray-600">
+              Anuncie AQUI! entre em contato conosco!
+            </div>
+
             {/* ⚽ TIMES */}
             <div className="bg-white p-4 rounded-xl shadow">
               <h3 className="font-bold mb-3 text-black">
@@ -158,8 +167,9 @@ export default function Home() {
 
             {/* 💰 ESPAÇO ANÚNCIO */}
             <div className="bg-gray-200 p-6 rounded-xl text-center text-gray-600">
-              Anuncie AQUI! entre em contato conosco!
+              <AdBanner />
             </div>
+
 
           </div>
 

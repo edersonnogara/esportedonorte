@@ -7,6 +7,7 @@ import Link from "next/link";
 import AdBanner from "@/components/AdBanner";
 import Bannerlateral from "@/components/lateral";
 
+
 type Noticia = {
   id: string;
   titulo: string;
@@ -26,7 +27,8 @@ export default function Home() {
     const { data } = await supabase
       .from("noticias")
       .select("*")
-      .order("data", { ascending: false });
+      .order("data", { ascending: false })
+      .limit(15);
 
     if (data) setNoticias(data);
   }
@@ -42,8 +44,6 @@ export default function Home() {
       {/* 🔥 HEADER */}
       <header className="bg-green-800 text-white p-4 flex justify-between items-center shadow">
         <h1 className="text-xl font-bold">Últimas Notícias</h1>
-
-
       </header>
 
       <div className="p-6 space-y-8 max-w-6xl mx-auto">
@@ -57,7 +57,7 @@ export default function Home() {
 
             <h2 className="font-bold text-lg text-gray-800">
               {destaque && (
-                <Link href={`/noticia/${destaque.id}`}>
+                <Link href={`/noticias/${destaque.id}`}>
                   <div className="relative rounded-2xl overflow-hidden shadow-lg cursor-pointer">
 
                     <img
@@ -80,12 +80,12 @@ export default function Home() {
               )}
             </h2>
 
-            <Bannerlateral />
+
 
             {noticias.slice(1).map((n) => (
 
 
-              <Link key={n.id} href={`/noticia/${n.id}`}>
+              <Link key={n.id} href={`/noticias/${n.id}`}>
                 <div className="flex gap-3 bg-white rounded-xl overflow-hidden shadow hover:scale-[1.01] transition">
 
                   <img
@@ -107,7 +107,13 @@ export default function Home() {
                 </div>
               </Link>
             ))}
+            <Link href="/noticias">
+              <h2 className="font-bold text-lg text-gray-800 cursor-pointer hover:underline">
+                Ver todas as notícias →
+              </h2>
+            </Link>
 
+            <AdBanner />
           </div>
 
           {/* ⚽ LATERAL */}
@@ -158,17 +164,21 @@ export default function Home() {
 
               <div className="grid grid-cols-3 gap-3">
                 {timesRO.map((t) => (
-                  <div key={t.nome} className="flex flex-col items-center text-xs">
-                    <img src={t.logo} className="w-10 h-10" />
-                    <span className="text-black text-center">{t.nome}</span>
-                  </div>
+                  <Link href={`/times/${t.id}`} key={t.id}>
+                    <div className="flex flex-col items-center text-xs cursor-pointer hover:scale-110 transition">
+
+                      <img src={t.logo} className="w-10 h-10" />
+                      <span className="text-black text-center">{t.nome}</span>
+
+                    </div>
+                  </Link>
                 ))}
               </div>
             </div>
 
             {/* 💰 ESPAÇO ANÚNCIO */}
             <div className="bg-gray-200 p-6 rounded-xl text-center text-gray-600">
-              <AdBanner />
+              <Bannerlateral />
             </div>
 
 

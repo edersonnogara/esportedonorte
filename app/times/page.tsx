@@ -1,6 +1,8 @@
 
 import Image from "next/image";
 import Link from "next/link";
+import { times } from "@/data/times";
+
 
 export default function Times() {
   return (
@@ -22,7 +24,7 @@ export default function Times() {
         </Link>
 
         {/* Guaporé FC */}
-        <Link href="/times/guapore-fc" className="bg-white p-4 rounded-xl shadow flex items-center gap-4 hover:scale-105 transition">
+        <Link href="/times/guapore" className="bg-white p-4 rounded-xl shadow flex items-center gap-4 hover:scale-105 transition">
           <Image src="/times/Guaporé_FC.png" width={40} height={40} alt="Guaporé FC" />
           <h2 className="font-bold text-gray-800">Guaporé FC</h2>
         </Link>

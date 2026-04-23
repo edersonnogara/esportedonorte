@@ -2,165 +2,104 @@
 
 import { useEffect, useState } from "react";
 import { supabase } from "@/lib/supabase";
-import { Noticia } from "@/types/noticias";
+import Link from "next/link";
+import { useSearchParams } from "next/navigation";
+import AdBanner from "@/components/AdBanner";
 
-export default function AdminNoticias() {
+type Noticia = {
+  id: string;
+  titulo: string;
+  imagem: string;
+  data: string;
+};
 
+const LIMIT = 15;
+
+export default function NoticiasPage() {
   const [noticias, setNoticias] = useState<Noticia[]>([]);
-  const [editId, setEditId] = useState<string | null>(null);
+  const [total, setTotal] = useState(0);
 
-  const [form, setForm] = useState({
-    titulo: "",
-    resumo: "",
-    conteudo: "",
-    imagem: ""
-  });
+  const searchParams = useSearchParams();
+  const page = Number(searchParams.get("page")) || 1;
 
   useEffect(() => {
-    carregarNoticias();
-  }, []);
+    carregar();
+  }, [page]);
 
-  async function carregarNoticias() {
-    const { data, error } = await supabase
+  async function carregar() {
+    const from = (page - 1) * LIMIT;
+    const to = from + LIMIT - 1;
+
+    const { data, count } = await supabase
       .from("noticias")
-      .select("*")
-      .order("data", { ascending: false });
+      .select("*", { count: "exact" })
+      .order("data", { ascending: false })
+      .range(from, to);
 
-    if (error) {
-      console.error(error);
-      return;
-    }
-
-    setNoticias(data);
+    if (data) setNoticias(data);
+    if (count) setTotal(count);
   }
 
-  function limparForm() {
-    setForm({
-      titulo: "",
-      resumo: "",
-      conteudo: "",
-      imagem: ""
-    });
-    setEditId(null);
-  }
-
-  async function salvar() {
-    if (!form.titulo) {
-      alert("Título obrigatório");
-      return;
-    }
-
-    if (editId) {
-      await supabase
-        .from("noticias")
-        .update(form)
-        .eq("id", editId);
-    } else {
-      await supabase
-        .from("noticias")
-        .insert([form]);
-    }
-
-    limparForm();
-    carregarNoticias();
-  }
-
-  async function excluir(id: string) {
-    await supabase
-      .from("noticias")
-      .delete()
-      .eq("id", id);
-
-    carregarNoticias();
-  }
-
-  function editar(n: Noticia) {
-    setEditId(n.id);
-    setForm({
-      titulo: n.titulo,
-      resumo: n.resumo,
-      conteudo: n.conteudo,
-      imagem: n.imagem
-    });
-  }
+  const totalPages = Math.ceil(total / LIMIT);
 
   return (
-    <div className="p-6 space-y-6 text-black">
+    <div className="p-6 max-w-5xl mx-auto space-y-6">
 
-      <h1 className="text-xl font-bold">Admin Notícias</h1>
-
-      {/* FORM */}
-      <div className="bg-white p-4 rounded-xl space-y-3">
-
-        <input
-          placeholder="Título"
-          className="w-full border p-2"
-          value={form.titulo}
-          onChange={(e) => setForm({ ...form, titulo: e.target.value })}
-        />
-
-        <input
-          placeholder="Resumo"
-          className="w-full border p-2"
-          value={form.resumo}
-          onChange={(e) => setForm({ ...form, resumo: e.target.value })}
-        />
-
-        <textarea
-          placeholder="Conteúdo completo"
-          className="w-full border p-2"
-          rows={5}
-          value={form.conteudo}
-          onChange={(e) => setForm({ ...form, conteudo: e.target.value })}
-        />
-
-        <input
-          placeholder="URL da imagem"
-          className="w-full border p-2"
-          value={form.imagem}
-          onChange={(e) => setForm({ ...form, imagem: e.target.value })}
-        />
-
-        <button
-          onClick={salvar}
-          className="bg-green-600 text-white px-4 py-2 rounded"
-        >
-          {editId ? "Atualizar" : "Publicar"}
-        </button>
-
-      </div>
+      <h1 className="text-2xl font-bold text-white">
+        Todas as Notícias
+      </h1>
 
       {/* LISTA */}
-      <div className="bg-white p-4 rounded-xl space-y-3">
+      <div className="space-y-4">
+
+        <AdBanner />
 
         {noticias.map((n) => (
-          <div key={n.id} className="border p-3 flex justify-between items-center">
+          <Link key={n.id} href={`/noticias/${n.id}`}>
+            <div className="flex gap-3 bg-white rounded-xl overflow-hidden shadow hover:scale-[1.01] transition">
 
-            <div>
-              <h2 className="font-bold">{n.titulo}</h2>
-              <span className="text-xs text-gray-500">
-                {new Date(n.data).toLocaleString("pt-BR")}
-              </span>
+              <img
+                src={n.imagem}
+                className="w-32 h-24 object-cover"
+              />
+
+              <div className="p-2">
+                <h3 className="font-bold text-black">
+                  {n.titulo}
+                </h3>
+
+                <span className="text-xs text-gray-500">
+                  {new Date(n.data).toLocaleDateString("pt-BR")}
+                </span>
+              </div>
+
             </div>
-
-            <div className="flex gap-2">
-              <button
-                onClick={() => editar(n)}
-                className="bg-yellow-500 px-2 py-1 text-white rounded"
-              >
-                Editar
-              </button>
-
-              <button
-                onClick={() => excluir(n.id)}
-                className="bg-red-600 px-2 py-1 text-white rounded"
-              >
-                Excluir
-              </button>
-            </div>
-
-          </div>
+          </Link>
         ))}
+      </div>
+
+      {/* PAGINAÇÃO */}
+      <div className="flex justify-center gap-2">
+
+        {page > 1 && (
+          <Link href={`/noticias?page=${page - 1}`}>
+            <button className="px-4 py-2 bg-gray-300 rounded">
+              ← Anterior
+            </button>
+          </Link>
+        )}
+
+        <span className="px-4 py-2 bg-white rounded text-black">
+          Página {page} de {totalPages}
+        </span>
+
+        {page < totalPages && (
+          <Link href={`/noticias?page=${page + 1}`}>
+            <button className="px-4 py-2 bg-green-600 text-white rounded">
+              Próxima →
+            </button>
+          </Link>
+        )}
 
       </div>
 

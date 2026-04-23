@@ -70,7 +70,7 @@ export default function AdminNoticias() {
   return (
     <div className="p-6 space-y-6 text-black">
 
-      <h1 className="text-xl font-bold">Admin Notícias</h1>
+      <h1 className="text-white text-xl font-bold">Admin Notícias</h1>
 
       {/* FORM */}
       <div className="bg-white p-4 rounded-xl space-y-3">

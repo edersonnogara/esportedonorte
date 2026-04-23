@@ -8,6 +8,8 @@ export type Time = {
     nome: string;
     grupo?: string;
   }[];
+  cidade: string;
+  
 };
 
 export function getEstadios() {
@@ -24,6 +26,7 @@ export const times: Time[] = [
     logo: "/times/PortoVelhoEC.png",
     estadio: "Aluizão",
     competicoes: [{ nome: "Rondoniense" }, { nome: "Copa Verde", grupo: "B" }],
+    cidade: "Porto Velho"
   },
   {
     id: "Ji-Paraná",
@@ -32,6 +35,7 @@ export const times: Time[] = [
     logo: "/times/JiParana1.png",
     estadio: "Biancão",
     competicoes: [{ nome: "Rondoniense" }],
+    cidade: "Ji-Paraná",
   },
   {
     id: "guapore",
@@ -40,6 +44,7 @@ export const times: Time[] = [
     logo: "/times/Guaporé_FC.png",
     estadio: "Cassolão",
     competicoes: [{ nome: "Rondoniense" }, { nome: "Copa Verde", grupo: "A" }],
+    cidade: "Rolim de Moura",
   },
 
   {
@@ -49,6 +54,7 @@ export const times: Time[] = [
     logo: "/times/RolimDeMouraEC.png",
     estadio: "Cassolão",
     competicoes: [{ nome: "BrasileiraoA3", grupo: "A" }],
+    cidade: "Rolim de Moura",
   },
 
   {
@@ -58,6 +64,7 @@ export const times: Time[] = [
     logo: "/times/itapuensero.png",
     estadio: "Aluizão",
     competicoes: [{ nome: "BrasileiraoA3", grupo: "A" }],
+    cidade: "Itapuã",
   },
 
   {
@@ -67,6 +74,7 @@ export const times: Time[] = [
     logo: "/times/SCGenus.png",
     estadio: "Aluizão",
     competicoes: [{ nome: "Rondoniense" }],
+    cidade: "Porto Velho"
   },
   {
     id: "rondoniense",
@@ -75,6 +83,7 @@ export const times: Time[] = [
     logo: "/times/RondonienseSocialClube.png",
     estadio: "Aluizão",
     competicoes: [{ nome: "Rondoniense" }],
+    cidade: "Porto Velho"
   },
   {
     id: "barcelona-ro",
@@ -83,6 +92,7 @@ export const times: Time[] = [
     logo: "/times/BarcelonaRO.png",
     estadio: "Aluizão",
     competicoes: [{ nome: "Rondoniense" }],
+    cidade: "Porto Velho"
   },
   {
     id: "uniao-cacoalense",
@@ -91,6 +101,7 @@ export const times: Time[] = [
     logo: "/times/UniaoCacoalense.png",
     estadio: "Aglair Tonelli",
     competicoes: [{ nome: "Rondoniense" }],
+    cidade: "Cacoal"
   },
 
   //times da copa verde
@@ -102,6 +113,7 @@ export const times: Time[] = [
     logo: "/times/Nacional_FC_Amazonas.png",
     estadio: "Arena da Amazônia",
     competicoes: [{ nome: "Copa Verde", grupo: "A" }],
+    cidade: "Manaus"
   },
 
   {
@@ -111,6 +123,7 @@ export const times: Time[] = [
     logo: "/times/Trem.png",
     estadio: "Zerão",
     competicoes: [{ nome: "Copa Verde", grupo: "A" }],
+    cidade: "Macapá"
   },
 
   {
@@ -120,6 +133,7 @@ export const times: Time[] = [
     logo: "/times/GASampaioRR.png",
     estadio: "Canarinho",
     competicoes: [{ nome: "Copa Verde", grupo: "A" }],
+    cidade: "Boa Vista"
   },
 
   {
@@ -129,6 +143,7 @@ export const times: Time[] = [
     logo: "/times/PaysanduSC.png",
     estadio: "Curuzu",
     competicoes: [{ nome: "Copa Verde", grupo: "A" }],
+    cidade: "Belém"
   },
 
   {
@@ -138,6 +153,7 @@ export const times: Time[] = [
     logo: "/times/independenciafc.png",
     estadio: "Tonicão",
     competicoes: [{ nome: "Copa Verde", grupo: "A" }],
+    cidade: "Rio Branco"
   },
 
   {
@@ -147,6 +163,7 @@ export const times: Time[] = [
     logo: "/times/AmazonasFC.png",
     estadio: "Carlos Zamith",
     competicoes: [{ nome: "Copa Verde", grupo: "B" }],
+    cidade: "Manaus"
   },
 
   {
@@ -156,6 +173,7 @@ export const times: Time[] = [
     logo: "/times/Águia_de_Marabá.png",
     estadio: "Zinho de Oliveira",
     competicoes: [{ nome: "Copa Verde", grupo: "B" }],
+    cidade: "Marabá"
   },
 
   {
@@ -165,6 +183,7 @@ export const times: Time[] = [
     logo: "/times/Remo.png",
     estadio: "Mangueirão",
     competicoes: [{ nome: "Copa Verde", grupo: "B" }],
+    cidade: "Belém"
   },
 
   {
@@ -174,6 +193,7 @@ export const times: Time[] = [
     logo: "/times/MonteRoraima.png",
     estadio: "Canarinho",
     competicoes: [{ nome: "Copa Verde", grupo: "B" }],
+    cidade: "Boa Vista"
   },
 
   {
@@ -183,5 +203,6 @@ export const times: Time[] = [
     logo: "/times/Galvez.png",
     estadio: "Tonicão",
     competicoes: [{ nome: "Copa Verde", grupo: "B" }],
+    cidade: "Rio Branco"
   },
 ];

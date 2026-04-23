@@ -41,12 +41,13 @@ export default function RootLayout({
           </div>
         </nav>
         {/* 🔥 GOOGLE ADS GLOBAL */}
-        <Script
-          async
-          strategy="afterInteractive"
-          src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1929109766263245"
-          crossOrigin="anonymous"
-        />
+        <head>
+          <script
+            async
+            src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1929109766263245"
+            crossOrigin="anonymous"
+          ></script>
+        </head>
 
 
         {/* CONTEÚDO */}

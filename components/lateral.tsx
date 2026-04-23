@@ -8,7 +8,7 @@ declare global {
   }
 }
 
-export default function AdBanner() {
+export default function Bannerlateral() {
   useEffect(() => {
     try {
       (window.adsbygoogle = window.adsbygoogle || []).push({});
@@ -22,7 +22,7 @@ export default function AdBanner() {
       className="adsbygoogle"
       style={{ display: "block" }}
       data-ad-client="ca-pub-1929109766263245"
-      data-ad-slot="3320690729"
+      data-ad-slot="7946331442"
       data-ad-format="auto"
       data-full-width-responsive="true"
     />

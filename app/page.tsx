@@ -5,6 +5,7 @@ import { supabase } from "@/lib/supabase";
 import { times } from "@/data/times";
 import Link from "next/link";
 import AdBanner from "@/components/AdBanner";
+import Bannerlateral from "@/components/lateral";
 
 type Noticia = {
   id: string;
@@ -79,7 +80,7 @@ export default function Home() {
               )}
             </h2>
 
-            <AdBanner />
+            <Bannerlateral />
 
             {noticias.slice(1).map((n) => (
 

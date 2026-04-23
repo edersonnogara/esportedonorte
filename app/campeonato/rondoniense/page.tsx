@@ -730,7 +730,7 @@ export default function Rondoniense() {
 
             </div>
 
-            <AdBanner />
+         
 
         </div>
     );

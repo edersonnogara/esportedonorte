@@ -52,7 +52,7 @@ export default function NoticiasPage() {
       {/* LISTA */}
       <div className="space-y-4">
 
-        <AdBanner />
+        
 
         {noticias.map((n) => (
           <Link key={n.id} href={`/noticias/${n.id}`}>

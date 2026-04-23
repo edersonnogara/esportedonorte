@@ -539,7 +539,7 @@ export default function CopaVerde() {
           </p>
         ))}
       </div>
-      <AdBanner />
+     
     </div>
 
   );

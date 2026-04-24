@@ -19,6 +19,7 @@ export default function Admin() {
     estadio: string;
     competicao: string;
     grupo: string;
+    link_youtube?: string;
   };
 
   const atualizarJogo = async (id: string) => {
@@ -36,6 +37,7 @@ export default function Admin() {
         estadio,
         competicao,
         grupo,
+        link_youtube,
       })
       .eq("id", id);
 
@@ -59,7 +61,7 @@ export default function Admin() {
   const [jogos, setJogos] = useState<any[]>([]);
   const [editIndex, setEditIndex] = useState<number | null>(null);
   const [grupo, setGrupo] = useState("");
-
+ const [link_youtube, setlink_youtube] = useState("");
 
   const [timesDB, setTimesDB] = useState<any[]>([]);
 
@@ -85,8 +87,8 @@ export default function Admin() {
     const { data, error } = await supabase
       .from("jogos")
       .select("*")
-      .order("rodada", { ascending: true })
-      .eq("competicao", "Copa Verde");
+      .order("rodada", { ascending: false })
+
 
     if (error) {
       console.error(error);
@@ -106,6 +108,7 @@ export default function Admin() {
       estadio: j.estadio,
       competicao: j.competicao,
       grupo: j.grupo,
+      link_youtube: j.link_youtube,
     }));
 
     setJogos(formatado);
@@ -152,7 +155,8 @@ export default function Admin() {
           data: dataInput,
           estadio,
           competicao,
-          grupo: competicao === "Copa Verde" ? grupo : null
+          grupo: competicao === "Copa Verde" ? grupo : null,
+          link_youtube,
         })
         .eq("id", editId);
 
@@ -176,7 +180,8 @@ export default function Admin() {
         data: dataInput,
         estadio,
         competicao,
-        grupo: competicao === "Copa Verde" ? grupo : null
+        grupo: competicao === "Copa Verde" ? grupo : null,
+        link_youtube
       });
 
       if (error) {
@@ -201,6 +206,7 @@ export default function Admin() {
       setCompeticao("");
       setEditId(null); // importante se estiver editando
       setGrupo("");
+      setlink_youtube("");
     };
 
     // 🔥 LIMPA TUDO
@@ -223,6 +229,7 @@ export default function Admin() {
     setCompeticao(jogo.competicao);
     setGrupo(jogo.grupo);
     setEditId(jogo.id); // 🔥 ESSENCIAL
+    
   };
 
   const excluirJogo = async (id: string) => {
@@ -266,7 +273,7 @@ export default function Admin() {
         <option value="">Competição</option>
         <option value="Rondoniense">Rondoniense</option>
         <option value="Copa Verde">Copa Verde</option>
-        <option value="Serie D">Serie D</option>
+        <option value="SerieD">Brasileirao Serie D</option>
       </select>
 
       {/* 🔥 SÓ MOSTRA GRUPO SE FOR COPA VERDE */}
@@ -360,6 +367,15 @@ export default function Admin() {
         onChange={(e) => setDataInput(e.target.value)}
         className="border p-2 w-full"
       />
+
+      <input
+        placeholder="Link YouTube"
+        value={link_youtube}
+        onChange={(e) => setlink_youtube(e.target.value)}
+        className="p-2 border rounded"
+      />
+
+
 
       {/* ESTÁDIO */}
       <select

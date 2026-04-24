@@ -25,7 +25,10 @@ export const times: Time[] = [
     estado: "RO",
     logo: "/times/PortoVelhoEC.png",
     estadio: "Aluizão",
-    competicoes: [{ nome: "Rondoniense" }, { nome: "Copa Verde", grupo: "B" }],
+    competicoes: [
+      { nome: "Rondoniense" }, 
+      { nome: "Copa Verde", grupo: "B" }, 
+      { nome: "Brasileirao Serie D", grupo: "A2" }],
     cidade: "Porto Velho"
   },
   {
@@ -43,7 +46,9 @@ export const times: Time[] = [
     estado: "RO",
     logo: "/times/Guapore_FC.png",
     estadio: "Cassolão",
-    competicoes: [{ nome: "Rondoniense" }, { nome: "Copa Verde", grupo: "A" }],
+    competicoes: [
+      { nome: "Rondoniense" }, { nome: "Copa Verde", grupo: "A" }, { nome: "Brasileirao Serie D", grupo: "A2" }
+    ],
     cidade: "Rolim de Moura",
   },
 
@@ -152,7 +157,7 @@ export const times: Time[] = [
     estado: "AC",
     logo: "/times/independenciafc.png",
     estadio: "Tonicão",
-    competicoes: [{ nome: "Copa Verde", grupo: "A" }],
+    competicoes: [{ nome: "Copa Verde", grupo: "A" },{ nome: "Brasileirao Serie D", grupo: "A2" }],
     cidade: "Rio Branco"
   },
 
@@ -202,7 +207,27 @@ export const times: Time[] = [
     estado: "AC",
     logo: "/times/Galvez.png",
     estadio: "Tonicão",
-    competicoes: [{ nome: "Copa Verde", grupo: "B" }],
+    competicoes: [{ nome: "Copa Verde", grupo: "B" },{ nome: "Brasileirao Serie D", grupo: "A2" }],
+    cidade: "Rio Branco"
+  },
+
+  {
+    id: "Araguaina",
+    nome: "Araguaína",
+    estado: "TO",
+    logo: "/times/Araguaina.png",
+    estadio: "Mirandão",
+    competicoes: [{ nome: "Brasileirao Serie D", grupo: "A2" }],
+    cidade: "Palmas"
+  },
+
+  {
+    id: "Humaita",
+    nome: "Humaitá",
+    estado: "AC",
+    logo: "/times/Humaita.png",
+    estadio: "Arena da Floresta",
+    competicoes: [{ nome: "Brasileirao Serie D", grupo: "A2" }],
     cidade: "Rio Branco"
   },
 ];
